@@ -12,8 +12,12 @@ defmodule Dictionary do
 
   def replace_cat(string) do
     string
-    |> String.replace(~r/cat/ , "dog")
+    |> String.replace(~r/cat/, "dog")
     |> IO.puts
+  end
+
+  def wrap_for_regex(string) do
+    "~r/#{string}/"
   end
 
   def find_word_regex(letter, word_count, letter_location) do
@@ -23,15 +27,21 @@ defmodule Dictionary do
       if number !== letter_location do
         ["."]
       else
-        [number]
+        [letter]
       end
     end)
     |> Enum.join
+    |> wrap_for_regex()
     |> IO.puts
   end
 
-  def find_word_by_letter(letter, word_count, letter_location) do
-    word_list()
-    |> Enum.find(fn word -> word ~= ~r/a/)
-  end
+
+
+
+  # def find_word_by_letter(letter, word_count, letter_location) do
+  #   #
+  #   # word_list()
+  #   # |> Enum.find(fn word -> word ~= ~r//)
+  #   find_word_regex(letter, word_count, letter_location)
+  # end
 end
