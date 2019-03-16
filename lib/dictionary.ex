@@ -17,31 +17,39 @@ defmodule Dictionary do
   end
 
   def wrap_for_regex(string) do
-    "~r/#{string}/"
+    ~r/#{string}/
   end
 
-  def find_word_regex(letter, word_count, letter_location) do
+  def number_is_letter?(locations, number) do
+    locations
+    |> Enum.member?(number)
+  end
+
+  def retrieve_letter(letters,locations, number) do
+    locations
+    |> Enum.find_index(fn location -> location == number end)
+    # enum at last line
+    |> Enum.at(letters, letter_index(locations, number))
+  end
+
+  def word_regex(word_count, letters, locations) do
     1..word_count
     |> Enum.to_list
     |> Enum.flat_map(fn number ->
-      if number !== letter_location do
-        ["."]
+      if number_is_letter?(locations, number) do
+        [retrieve_letter(letters, locations, number)]
       else
-        [letter]
+        ["."]
       end
     end)
     |> Enum.join
     |> wrap_for_regex()
-    |> IO.puts
   end
 
-
-
-
-  # def find_word_by_letter(letter, word_count, letter_location) do
-  #   #
-  #   # word_list()
-  #   # |> Enum.find(fn word -> word ~= ~r//)
-  #   find_word_regex(letter, word_count, letter_location)
-  # end
+  def find_word_by_letter(word_count, letters, locations) do
+    word_list()
+    |> Enum.find(fn word ->
+      String.match?(word, word_regex(word_count, letters, locations))
+     end)
+  end
 end
